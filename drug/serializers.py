@@ -8,7 +8,7 @@ logger = logging.getLogger('django')
 class NutrientsSerializer(serializers.ModelSerializer):    
     class Meta:
         model = Nutrient
-        fields = ('glasses_water', 'meal', 'date','user')
+        fields = ('meal', 'date','user')
 
 class HeartRateSerializer(serializers.ModelSerializer):    
     class Meta:

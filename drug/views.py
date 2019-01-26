@@ -86,6 +86,7 @@ class Symptom(APIView):
             data.append(api.symptom_details(mysymptomlist["id"]))
             
         return Response({"test":data},status=status.HTTP_200_OK)
+import requests
 
 @csrf_exempt
 @api_view(["POST"])
@@ -114,19 +115,19 @@ class HeartRateApi(APIView):
     def get(self, request):
         logger.info('Get request initiated.')
         try:
-            nutrients = Nutrient.objects.all()
-            nserializer = NutrientsSerializer(nutrients)
-            nutrient_data = nserializer.data
-            logger.info("Request completed\nRequest status code: 200\nData: " + str(nutrient_data))
-            return Response(booking_data, status=status.HTTP_200_OK)
+            heartrate = HeartRate.objects.all()
+            hserializer = HeartRateSerializer(heartrate)
+            heartrate_data = hserializer.data
+            logger.info("Request completed\nRequest status code: 200\nData: " + str(heartrate_data))
+            return Response(heartrate_data, status=status.HTTP_200_OK)
         except:
             logger.error('No details found for given date')
             return Response({'success': False, 'message': 'No details found for given date'}, status=status.HTTP_400_BAD_REQUEST)
     
-    def post(self, request):
+    def post(self, request, user):
         logger.info('Update request initiated.')
         request_data = request.data.copy()
-        request_data['date'] = datebooking
+        request_data['user'] = user
         singleroomaval = request_data.get('singleroomaval','')
         doubleroomaval = request_data.get('doubleroomaval','')
         if singleroomaval != '':
@@ -156,13 +157,12 @@ class NutrientsApi(APIView):
             nserializer = NutrientsSerializer(nutrients)
             nutrient_data = nserializer.data
             logger.info("Request completed\nRequest status code: 200\nData: " + str(nutrient_data))
-            return Response(booking_data, status=status.HTTP_200_OK)
+            return Response(nutrient_data, status=status.HTTP_200_OK)
         except:
             logger.error('No details found for given date')
             return Response({'success': False, 'message': 'No details found for given date'}, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
-        logger.info('Update request initiated.')
         request_data = request.data.copy()
         request_data['date'] = datebooking
         singleroomaval = request_data.get('singleroomaval','')
@@ -184,3 +184,54 @@ class NutrientsApi(APIView):
             return Response(bserializer.data, status=status.HTTP_200_OK)
         logger.error(bserializer.errors)
         return Response(bserializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        request_data["user"] = request.user
+        mealval = request_data.get('meal','')
+        data = {
+            "query":mealval,
+            "timezone": "US/Eastern"
+            }
+        result = requests.post(url, data, headers={"x-app-id":"94f5edb6","x-app-key":"8bb3ae712275e9810ceec3b583e2727d"})
+        calories = 0
+        fat = 0
+        sugar = 0
+        protein = 0
+        carbs = 0
+        vita = 0
+        vitb = 0
+        vitc = 0
+        vitd = 0
+        vite = 0
+        foodlist = ""
+        for fooditem in result["foods"]:
+            foodlist += fooditem["food_name"]+" "
+            calories+=fooditem["nf_calories"]
+            fat+=fooditem["nf_total_fat"]
+            sugar+=fooditem["nf_sugars"]
+            protein+=fooditem["nf_protein"]
+            carbs+=fooditem["nf_total_carbohydrate"]
+            nutlist = fooditem["full_nutrients"] 
+            vita+=nutlist[22]["value"]+nutlist[24]["value"]
+            vitb+=nutlist[38]["value"]+nutlist[40]["value"]
+            vitc+=nutlist[33]["value"]
+            vitd+=nutlist[29]["value"]
+            vite+=nutlist[27]["value"]
+
+        response = {
+            "Food List":foodlist,
+            "Calories":calories,
+            "Fat":fat,
+            "Sugars":sugar,
+            "Protein":protein,
+            "Carbohydrates":carbs,
+            "Vitamin A":vita,
+            "Vitamin B Complex":vitb,
+            "Vitamin C":vitc,
+            "Vitamin D":vitd,
+            "Vitamin E":vite
+        }
+
+        nserializer = NutrientsSerializer(data=request_data)
+        if nserializer.is_valid():
+            nserializer.save()
+            return Response(response, status=status.HTTP_200_OK)
+        return Response(nserializer.errors, status=status.HTTP_400_BAD_REQUEST)
