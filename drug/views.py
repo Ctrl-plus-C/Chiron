@@ -42,8 +42,8 @@ class Prescription(APIView):
         # import pdb; pdb.set_trace()
         data = requests.get("https://api.fda.gov/drug/label.json?search="+medicname).json()
         
-
         return Response(data, status=status.HTTP_200_OK)
+
 def medication(request):
     if request.user.is_authenticated():
         return render(request, 'drug/medication.html', {})
