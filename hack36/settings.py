@@ -39,8 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drug',
     'rest_framework',
-    'rest_framework.authtoken',
+    'widget_tweaks',
 ]
+
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,16 +73,8 @@ TEMPLATES = [
     },
 ]
 
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
-}
-
 WSGI_APPLICATION = 'hack36.wsgi.application'
-
+REGISTRATION_OPEN = True
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -114,14 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated', )
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

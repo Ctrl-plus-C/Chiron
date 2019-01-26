@@ -4,8 +4,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.home, name="home"),
-    url(r'api/login', views.login, name='login'),
-    url(r'api/sampleapi', views.sample_api, name='sample_api'),
+    url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'api/nutrient',views.NutrientsApi.as_view() ,name='Nutrient'),
     url(r'api/heart_rate',views.HeartRateApi.as_view() ,name='Heart Rate'),
     url(r'api/parse', views.ParseD.as_view(), name='gete'),
