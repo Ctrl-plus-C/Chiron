@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
@@ -22,33 +22,61 @@ import requests,json
 infermedica_api.configure(app_id='945555e1', app_key='be2ee424c225c567086a084637a359de')
 
 def home(request):
-    return render(request, 'drug/home.html',{})
+    if request.user.is_authenticated():
+        return render(request, 'drug/home.html',{})
+    return redirect('accounts/login')
 
 def loginpage(request):
     return render(request, 'drug/login.html', {})
 
 def search(symptom):
+        import pdb; pdb.set_trace()
         api = infermedica_api.get_api()
         data = api.search(symptom["orth"])
         return data
 
+class Prescription(APIView):
+    @csrf_exempt
+    def post(self,request):
+        medicname = request.data.get("text")
+        # import pdb; pdb.set_trace()
+        data = requests.get("https://api.fda.gov/drug/label.json?search="+medicname).json()
+        
+
+        return Response(data, status=status.HTTP_200_OK)
+def medication(request):
+    if request.user.is_authenticated():
+        return render(request, 'drug/medication.html', {})
+    return redirect('accounts/login.html')
+
 class ParseD(APIView):
+    @csrf_exempt
     def post(self,request):
         sentence = request.data.get("text")
         api = infermedica_api.get_api()
         response = api.parse(sentence).to_dict()["mentions"]
-        # import pdb; pdb.set_trace()
-        mysymptomlist = {}
+        mysymptomlist = []
+        templist = {}
+        print("reached templist")
         for data in response:
-            mysymptomlist["orth"] = data["orth"]
-            mysymptomlist["id"] = data["id"]
-        
-        # import pdb; pdb.set_trace()
-        callsearchdata = api.search(mysymptomlist)
-        
-        return Response(callsearchdata, status=status.HTTP_200_OK)
+            templist["orth"] = data["orth"]
+            templist["id"] = data["id"]
+            mysymptomlist.append(templist.copy())
+
+        finalsearchdata = []
+        print("reached finalserach")
+        for symptom in mysymptomlist:
+            callsearchdata = api.search(symptom['orth'])
+            finalsearchdata.extend(callsearchdata)
+        finaldict = {}
+        print("conversion")
+        for dictdata in finalsearchdata:
+            finaldict[dictdata['label']] = dictdata['id']
+
+        return Response(finaldict, status=status.HTTP_200_OK)
 
 class Condition(APIView):
+    @csrf_exempt
     def post(self, request):
         api = infermedica_api.API(app_id='945555e1', app_key='be2ee424c225c567086a084637a359de')
         # r = infermedica_api.Diagnosis(app_id='945555e1', app_key='be2ee424c225c567086a084637a359de')
@@ -59,26 +87,28 @@ class Condition(APIView):
 
 # class Search(APIView):
 
+
 class Diagnosis(APIView):
+    @csrf_exempt
     def post(self,request):
-        orth = request.data.get("orth")
-        s_id = request.data.get("id")
+        present_symptoms = request.data.getlist('choices[]')
+        absent_symptoms = request.data.getlist('unchoices[]')
         api = infermedica_api.get_api()
-        re = infermedica_api.Diagnosis(sex=request.data.get("sex"), age=request.data.get("age"))
-        
-        # import pdb; pdb.set_trace()
-        re.add_symptom(s_id, 'present', initial=True)
-        # re.add_symptom('s_98', 'present', initial=True)
-        # re.add_symptom('s_107', 'absent')
+        re = infermedica_api.Diagnosis(sex=request.data.get("gender"), age=request.data.get("age"))
+
+        for symptom in present_symptoms:            
+            re.add_symptom(symptom, 'present')
+        for symptom in absent_symptoms:
+            re.add_symptom(symptom, 'absent')
 
         re= api.diagnosis(re).to_dict()
-        import pdb; pdb.set_trace()
-        return Response({"test":re["conditions"]}, status=status.HTTP_200_OK)
+        return Response({"test":re}, status=status.HTTP_200_OK)
         
     # call diagnosis
         
 
 class Symptom(APIView):
+    @csrf_exempt
     def post(self,request):
         api = infermedica_api.get_api()
         
@@ -91,46 +121,46 @@ class Symptom(APIView):
             data.append(api.symptom_details(mysymptomlist["id"]))
             
         return Response({"test":data},status=status.HTTP_200_OK)
-import requests
 
-@csrf_exempt
-@api_view(["POST"])
-@permission_classes((AllowAny,))
-def login(request):
-    username = request.data.get("username")
-    password = request.data.get("password")
-    if username is None or password is None:
-        return Response({'error': 'Please provide both username and password'},
-                        status=HTTP_400_BAD_REQUEST)
-    user = authenticate(username=username, password=password)
-    if not user:
-        return Response({'error': 'Invalid Credentials'},
-                        status=HTTP_404_NOT_FOUND)
-    token, restdetails = Token.objects.get_or_create(user=user)
-    return Response({'token': token.key, "hasuraid": user.id},
-                    status=HTTP_200_OK)
 
-@csrf_exempt
-@api_view(["GET"])
-def sample_api(request):
-    data = {'sample_data': 123}
-    return Response(data, status=HTTP_200_OK)
+
+# @csrf_exempt
+# @api_view(["POST"])
+# @permission_classes((AllowAny,))
+# def login(request):
+#     username = request.data.get("username")
+#     password = request.data.get("password")
+#     if username is None or password is None:
+#         return Response({'error': 'Please provide both username and password'},
+#                         status=HTTP_400_BAD_REQUEST)
+#     user = authenticate(username=username, password=password)
+#     if not user:
+#         return Response({'error': 'Invalid Credentials'},
+#                         status=HTTP_404_NOT_FOUND)
+#     token, restdetails = Token.objects.get_or_create(user=user)
+#     return Response({'token': token.key, "hasuraid": user.id},
+#                     status=HTTP_200_OK)
+
+# @csrf_exempt
+# @api_view(["GET"])
+# def sample_api(request):
+#     data = {'sample_data': 123}
+#     return Response(data, status=HTTP_200_OK)
+
 
 class HeartRateApi(APIView):
+    @csrf_exempt
     def get(self, request):
-        logger.info('Get request initiated.')
         try:
             heartrate = HeartRate.objects.all()
             hserializer = HeartRateSerializer(heartrate)
             heartrate_data = hserializer.data
-            logger.info("Request completed\nRequest status code: 200\nData: " + str(heartrate_data))
             return Response(heartrate_data, status=status.HTTP_200_OK)
         except:
-            logger.error('No details found for given date')
             return Response({'success': False, 'message': 'No details found for given date'}, status=status.HTTP_400_BAD_REQUEST)
     
+    @csrf_exempt
     def post(self, request, user):
-        logger.info('Update request initiated.')
         request_data = request.data.copy()
         request_data['user'] = user
         singleroomaval = request_data.get('singleroomaval','')
@@ -148,25 +178,22 @@ class HeartRateApi(APIView):
             bserializer = BookingSerializer(data=request_data)
         if bserializer.is_valid():
             bserializer.save()
-            logger.info('Request completed\nRequest status code: 200\nData: ' + str(bserializer.data))
             return Response(bserializer.data, status=status.HTTP_200_OK)
-        logger.error(bserializer.errors)
         return Response(bserializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class NutrientsApi(APIView):
+    @csrf_exempt
     def get(self, request):
-        logger.info('Get request initiated.')
         try:
             nutrients = Nutrient.objects.all()
             nserializer = NutrientsSerializer(nutrients)
             nutrient_data = nserializer.data
-            logger.info("Request completed\nRequest status code: 200\nData: " + str(nutrient_data))
             return Response(nutrient_data, status=status.HTTP_200_OK)
         except:
-            logger.error('No details found for given date')
             return Response({'success': False, 'message': 'No details found for given date'}, status=status.HTTP_400_BAD_REQUEST)
-
+    
+    @csrf_exempt
     def post(self, request):
         request_data = request.data.copy()
         request_data["user"] = request.user.pk

@@ -48,20 +48,20 @@
             <li class="nav-divider">Menu</li>
             <li class="nav-item ">
               <a
-                class="nav-link active"
-                href="#"
-                data-toggle="collapse"
-                aria-expanded="false"
-                data-target="#submenu-1"
-                aria-controls="submenu-1"
+                class="nav-link"
+                href="{% url 'home' %}"
                 ><i class="fa fa-fw fa-user-circle"></i>Diagnosis
                 <span class="badge badge-success">6</span></a
               >
             </li>
             <li class="nav-item">
               <a
-                class="nav-link"
-                href="{% url 'medication' %}"
+                class="nav-link active"
+                href="#"
+                data-toggle="collapse"
+                aria-expanded="false"
+                data-target="#submenu-2"
+                aria-controls="submenu-2"
                 ><i class="fa fa-fw fa-rocket"></i>Medication</a
               >
             </li>
@@ -305,86 +305,4 @@
 <script src="{% static 'vendor/charts/charts-bundle/chartjs.js' %" }></script>
 <!-- dashboard js -->
 <script src="{% static 'js/dashboard-influencer.js' %}"></script>
-<script>
-  $("#submit").click(function(event) {
-    console.log("clicked");
-    event.preventDefault();
-    var userQuery = $("#wellnessquestion").val();
-    data = {};
-    data["text"] = userQuery;
-    data["csrfmiddlewaretoken"] = "{{ csrf_token }}";
-    var htmlstr = "";
-    $.ajaxSetup({
-      headers: { "X-CSRFToken": "{{csrf_token}}" }
-    });
-    $.ajax({
-      type: "POST",
-      url: "/api/parse/",
-      data: data,
-      success: function(data) {
-        console.log("in");
-        $.map(data, function(value, index) {
-          htmlstr +=
-            '<input type="checkbox" name="selectOption" value="' +
-            value +
-            '">' +
-            index +
-            "</input><br/>";
-        });
-        htmlstr += '<input type="checkbox" name="gender" value="male">Male</input><br/><input type="checkbox" name="gender" value="female">Female</input><br/>';
-        htmlstr += '<input type="text" placeholder="age" id="userage" /><br/>';
-        htmlstr +=
-          '<div class="form-group row justify-content-center diagnosis"><button class="btn btn-primary" id="diagnose">Diagnose</button></div>';
-        $("#feeling").fadeOut();
-        $("#submit").fadeOut();
-        $("#insertoptions").html(htmlstr);
-      },
-      error: function(XMLHttpRequest, textStatus, errorThrown) {
-        console.log("error");
-      }
-    });
-  });
-</script>
-<script>
-  $("body").on('click', '#diagnose' , function(event){
-    console.log("clicked");
-    event.preventDefault();
-    var selectedOnes = [];
-    var unselectedOnes = [];
-    $("input[name='selectOption']:checked").each(function() {
-      selectedOnes.push($(this).val());
-    });
-    $("input[name='selectOption']:checkbox:not(:checked)").each(function() {
-      unselectedOnes.push($(this).val());
-    });
-    var gender = $("input[name='gender']:checked").val();
-    var age = $("#userage").val();
-    data = {};
-    data["choices[]"] = selectedOnes;
-    data["unchoices[]"] = unselectedOnes;
-    data["gender"] = gender;
-    data["age"] = age;
-    data["csrfmiddlewaretoken"] = "{{ csrf_token }}";
-    $.ajaxSetup({
-      headers: { "X-CSRFToken": "{{csrf_token}}" }
-    });
-    $.ajax({
-      type: "POST",
-      url: "/api/diagnose/",
-      data: data,
-      success: function(data) {
-          $('#insertoptions').fadeOut();
-          htmlstr = "";
-          htmlstr += "<h1>Possible diseases in decreasing order of probability</h1>";
-          $.map(data.test.conditions, function(value, index){
-            htmlstr += '<h3>' + (index + 1) + '. ' + value.name + ' ' + value.probability + '</h3>';
-          })
-          $('#finale').html(htmlstr);
-      },
-      error: function(XMLHttpRequest, textStatus, errorThrown) {
-        console.log("error");
-      }
-    });
-  });
-</script>
 {% endblock %}
