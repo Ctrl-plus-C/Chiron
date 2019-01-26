@@ -11,13 +11,13 @@ from rest_framework.status import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
-from .models import Nutrient, Record, Symptomrecord, Diseaserecord, Foodrecord, Foodlist
+from .models import Nutrient, Record, Symptomrecord, Diseaserecord, Foodrecord, Foodlist, Selfcarediary
 from .serializers import NutrientsSerializer
 from rest_framework.views import APIView
 from rest_framework import permissions, status
 import infermedica_api
 # import Symp
-
+from .serializers import SelfcarediarySerializer
 import requests,json
 infermedica_api.configure(app_id='945555e1', app_key='be2ee424c225c567086a084637a359de')
 
@@ -37,6 +37,11 @@ def search(symptom):
 def nutrients(request):
     if request.user.is_authenticated():
         return render(request, 'drug/nutrients.html', {})
+    return redirect('accounts/login')
+
+def selfdiary(request):
+    if request.user.is_authenticated():
+        return render(request, 'drug/selfdiary.html', {})
     return redirect('accounts/login')
 
 class Prescription(APIView):
@@ -267,3 +272,23 @@ class NutrientsApi(APIView):
             # nserializer.save()
         return Response(response, status=status.HTTP_200_OK)
         # return Response(nserializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SelfdiaryApi(APIView):
+    def post(self, request):
+        request_data = request.data.copy()
+        request_data["user"] = request.user.pk
+        sserializer = SelfcarediarySerializer(data=request_data)
+        if sserializer.is_valid():
+            sserializer.save()
+            return Response(sserializer.data, status=status.HTTP_200_OK)
+        return Response(sserializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request):
+        try:
+            selfdiary = Selfcarediary.objects.filter(user=request.user)
+            resplist = []
+            for qset in selfdiary:
+                resplist.append({"diary":qset.diary,"date":qset.date})
+            return Response({"data":resplist}, status=status.HTTP_200_OK)
+        except:
+            return Response({"success": False}, status=status.HTTP_400_BAD_REQUEST)

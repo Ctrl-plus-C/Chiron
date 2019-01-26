@@ -1,9 +1,7 @@
 from rest_framework import serializers
-from .models import Nutrient
+from .models import Nutrient, Selfcarediary
 from .models import HeartRate
-import logging
 
-logger = logging.getLogger('django')
 
 class NutrientsSerializer(serializers.ModelSerializer):    
     class Meta:
@@ -14,3 +12,8 @@ class HeartRateSerializer(serializers.ModelSerializer):
     class Meta:
         model = HeartRate
         fields = ('bpm', 'date','user')
+
+class SelfcarediarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Selfcarediary
+        fields = ('user', 'date', 'diary')

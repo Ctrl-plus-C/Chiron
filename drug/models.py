@@ -88,3 +88,15 @@ class Foodlist(models.Model):
 
     def __unicode__(self):
         return self.food_record.user.username
+
+class Selfcarediary(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    diary = models.TextField()
+    date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username
+
+    def __unicode__(self):
+        return self.user.username
+    
