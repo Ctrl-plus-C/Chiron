@@ -44,6 +44,10 @@ class Prescription(APIView):
         
 
         return Response(data, status=status.HTTP_200_OK)
+def medication(request):
+    if request.user.is_authenticated():
+        return render(request, 'drug/medication.html', {})
+    return redirect('accounts/login.html')
 
 class ParseD(APIView):
     @csrf_exempt
