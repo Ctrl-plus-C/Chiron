@@ -11,7 +11,7 @@ from rest_framework.status import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
-from .models import Nutrient
+from .models import Nutrient, Record, Symptomrecord, Diseaserecord, Foodrecord, Foodlist
 from .serializers import NutrientsSerializer
 from rest_framework.views import APIView
 from rest_framework import permissions, status
@@ -30,10 +30,14 @@ def loginpage(request):
     return render(request, 'drug/login.html', {})
 
 def search(symptom):
-        import pdb; pdb.set_trace()
         api = infermedica_api.get_api()
         data = api.search(symptom["orth"])
         return data
+
+def nutrients(request):
+    if request.user.is_authenticated():
+        return render(request, 'drug/nutrients.html', {})
+    return redirect('accounts/login')
 
 class Prescription(APIView):
     @csrf_exempt
@@ -53,6 +57,8 @@ class ParseD(APIView):
     @csrf_exempt
     def post(self,request):
         sentence = request.data.get("text")
+        dbrow = Record(user=request.user,search_query=sentence)
+        dbrow.save()
         api = infermedica_api.get_api()
         response = api.parse(sentence).to_dict()["mentions"]
         mysymptomlist = []
@@ -72,7 +78,8 @@ class ParseD(APIView):
         print("conversion")
         for dictdata in finalsearchdata:
             finaldict[dictdata['label']] = dictdata['id']
-
+            symprow = Symptomrecord(user_record=dbrow,present_symptoms=dictdata['label'],present_symptoms_id=dictdata['id'])
+            symprow.save()
         return Response(finaldict, status=status.HTTP_200_OK)
 
 class Condition(APIView):
@@ -93,6 +100,8 @@ class Diagnosis(APIView):
     def post(self,request):
         present_symptoms = request.data.getlist('choices[]')
         absent_symptoms = request.data.getlist('unchoices[]')
+        query_text = request.data.get('queryText')
+        recordobject = Record.objects.get(user=request.user,search_query=query_text)
         api = infermedica_api.get_api()
         re = infermedica_api.Diagnosis(sex=request.data.get("gender"), age=request.data.get("age"))
 
@@ -102,6 +111,9 @@ class Diagnosis(APIView):
             re.add_symptom(symptom, 'absent')
 
         re= api.diagnosis(re).to_dict()
+        for dictdata in re['conditions']:
+            diseaseobject = Diseaserecord(user_record=recordobject, probable_diseases=dictdata['name'], probable_diseases_id=dictdata['id'])
+            diseaseobject.save()
         return Response({"test":re}, status=status.HTTP_200_OK)
         
     # call diagnosis
@@ -197,7 +209,7 @@ class NutrientsApi(APIView):
     def post(self, request):
         request_data = request.data.copy()
         request_data["user"] = request.user.pk
-        mealval = request_data.get('meal','')
+        mealval = request_data.get('meal')
         data = {
             "query":mealval,
             "timezone": "US/Eastern"
@@ -227,23 +239,29 @@ class NutrientsApi(APIView):
             vitc+=nutlist[33]["value"]
             vitd+=nutlist[29]["value"]
             vite+=nutlist[27]["value"]
+        
+        foodrecord = Foodrecord(user=request.user,search_query=mealval,calories=calories,fat=fat,sugars=sugar,protein=protein,carbohydrates=carbs,vitamina=vita,vitaminbcomplex=vitb,vitaminc=vitc,vitamind=vitd,vitamine=vite)
+        foodrecord.save()
+        for fooditem in result.json()["foods"]:
+            foodlistobj = Foodlist(food_record=foodrecord,food_item=fooditem["food_name"])
+            foodlistobj.save()
 
         response = {
-            "Food List":foodlist,
-            "Calories":calories,
-            "Fat":fat,
-            "Sugars":sugar,
-            "Protein":protein,
-            "Carbohydrates":carbs,
-            "Vitamin A":vita,
-            "Vitamin B Complex":vitb,
-            "Vitamin C":vitc,
-            "Vitamin D":vitd,
-            "Vitamin E":vite
+            "foodlist":foodlist,
+            "calories":calories,
+            "fat":fat,
+            "sugars":sugar,
+            "protein":protein,
+            "carbohydrates":carbs,
+            "vitamina":vita,
+            "vitaminbcomplex":vitb,
+            "vitaminc":vitc,
+            "vitamind":vitd,
+            "vitamine":vite
         }
 
-        nserializer = NutrientsSerializer(data=request.data)
-        if nserializer.is_valid():
-            nserializer.save()
-            return Response(response, status=status.HTTP_200_OK)
-        return Response(nserializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # nserializer = NutrientsSerializer(data=request.data)
+        # if nserializer.is_valid():
+            # nserializer.save()
+        return Response(response, status=status.HTTP_200_OK)
+        # return Response(nserializer.errors, status=status.HTTP_400_BAD_REQUEST)
