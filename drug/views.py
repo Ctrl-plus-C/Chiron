@@ -164,26 +164,6 @@ class NutrientsApi(APIView):
 
     def post(self, request):
         request_data = request.data.copy()
-        request_data['date'] = datebooking
-        singleroomaval = request_data.get('singleroomaval','')
-        doubleroomaval = request_data.get('doubleroomaval','')
-        if singleroomaval != '':
-            if int(singleroomaval) > 5 or int(singleroomaval) < 0:
-                return Response({"success": False,"message": "Availability must be between 0 and 5."}, status=status.HTTP_400_BAD_REQUEST)
-        if doubleroomaval != '':
-            if int(doubleroomaval) > 5 or int(doubleroomaval) < 0:
-                return Response({"success": False,"message": "Availability must be between 0 and 5."}, status=status.HTTP_400_BAD_REQUEST)                
-        try:
-            booking = Booking.objects.get(date=datebooking)
-            bserializer = BookingSerializer(booking, data=request_data, partial=True)
-        except:
-            bserializer = BookingSerializer(data=request_data)
-        if bserializer.is_valid():
-            bserializer.save()
-            logger.info('Request completed\nRequest status code: 200\nData: ' + str(bserializer.data))
-            return Response(bserializer.data, status=status.HTTP_200_OK)
-        logger.error(bserializer.errors)
-        return Response(bserializer.errors, status=status.HTTP_400_BAD_REQUEST)
         request_data["user"] = request.user
         mealval = request_data.get('meal','')
         data = {
