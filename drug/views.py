@@ -169,13 +169,13 @@ class NutrientsApi(APIView):
 
     def post(self, request):
         request_data = request.data.copy()
-        request_data["user"] = request.user
+        request_data["user"] = request.user.pk
         mealval = request_data.get('meal','')
         data = {
             "query":mealval,
             "timezone": "US/Eastern"
             }
-        result = requests.post(url, data, headers={"x-app-id":"94f5edb6","x-app-key":"8bb3ae712275e9810ceec3b583e2727d"})
+        result = requests.post('https://trackapi.nutritionix.com/v2/natural/nutrients', data, headers={"x-app-id":"94f5edb6","x-app-key":"8bb3ae712275e9810ceec3b583e2727d"})
         calories = 0
         fat = 0
         sugar = 0
@@ -187,8 +187,8 @@ class NutrientsApi(APIView):
         vitd = 0
         vite = 0
         foodlist = ""
-        for fooditem in result["foods"]:
-            foodlist += fooditem["food_name"]+" "
+        for fooditem in result.json()["foods"]:
+            foodlist += fooditem["food_name"]+"; "
             calories+=fooditem["nf_calories"]
             fat+=fooditem["nf_total_fat"]
             sugar+=fooditem["nf_sugars"]
@@ -215,7 +215,7 @@ class NutrientsApi(APIView):
             "Vitamin E":vite
         }
 
-        nserializer = NutrientsSerializer(data=request_data)
+        nserializer = NutrientsSerializer(data=request.data)
         if nserializer.is_valid():
             nserializer.save()
             return Response(response, status=status.HTTP_200_OK)
