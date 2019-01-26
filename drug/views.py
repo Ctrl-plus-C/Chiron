@@ -98,10 +98,12 @@ class Condition(APIView):
 class Diagnosis(APIView):
     @csrf_exempt
     def post(self,request):
-        present_symptoms = request.data.getlist('choices[]')
-        absent_symptoms = request.data.getlist('unchoices[]')
-        query_text = request.data.get('queryText')
-        recordobject = Record.objects.get(user=request.user,search_query=query_text)
+        try:
+            present_symptoms = request.data.getlist('choices[]')
+            absent_symptoms = request.data.getlist('unchoices[]')
+        except AttributeError:
+            present_symptoms = request.data.get('choices')
+            absent_symptoms = request.data.get('unchoices')
         api = infermedica_api.get_api()
         re = infermedica_api.Diagnosis(sex=request.data.get("gender"), age=request.data.get("age"))
 
