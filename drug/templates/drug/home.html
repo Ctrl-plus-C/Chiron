@@ -49,11 +49,7 @@
             <li class="nav-item ">
               <a
                 class="nav-link active"
-                href="#"
-                data-toggle="collapse"
-                aria-expanded="false"
-                data-target="#submenu-1"
-                aria-controls="submenu-1"
+                href="{% url 'home' %}"
                 ><i class="fa fa-fw fa-user-circle"></i>Diagnosis
                 <span class="badge badge-success">6</span></a
               >
@@ -65,6 +61,13 @@
                 ><i class="fa fa-fw fa-rocket"></i>Medication</a
               >
             </li>
+            <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="{% url 'nutrients' %}"
+                  ><i class="fa fa-fw fa-rocket"></i>Nutrients</a
+                >
+              </li>
           </ul>
         </div>
       </nav>

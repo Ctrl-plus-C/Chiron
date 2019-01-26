@@ -8,7 +8,12 @@
   <!-- ============================================================== -->
   <div class="dashboard-header">
     <nav class="navbar navbar-expand-lg bg-white fixed-top">
-      <a class="navbar-brand" href="index.html"><img class="img-responsive" style="width:30%;" src="{% static 'chiron.png' %}"></a>
+      <a class="navbar-brand" href="index.html"
+        ><img
+          class="img-responsive"
+          style="width:30%;"
+          src="{% static 'chiron.png' %}"
+      /></a>
       <button
         class="navbar-toggler"
         type="button"
@@ -48,27 +53,21 @@
           <ul class="navbar-nav flex-column">
             <li class="nav-divider">Menu</li>
             <li class="nav-item ">
-              <a
-                class="nav-link"
-                href="{% url 'home' %}"
+              <a class="nav-link" href="{% url 'home' %}"
                 ><i class="fa fa-fw fa-user-circle"></i>Diagnosis
                 <span class="badge badge-success">6</span></a
               >
             </li>
             <li class="nav-item">
-              <a
-                class="nav-link active"
-                href="{% url 'medication' %}"
+              <a class="nav-link" href="{% url 'medication' %}"
                 ><i class="fa fa-fw fa-rocket"></i>Medication</a
               >
             </li>
             <li class="nav-item">
-                <a
-                  class="nav-link"
-                  href="{% url 'nutrients' %}"
-                  ><i class="fa fa-fw fa-rocket"></i>Nutrients</a
-                >
-              </li>
+              <a class="nav-link active" href="{% url 'nutrients' %}"
+                ><i class="fa fa-fw fa-rocket"></i>Nutrients</a
+              >
+            </li>
           </ul>
         </div>
       </nav>
@@ -89,16 +88,13 @@
         <div class="row">
           <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="page-header">
-              <h3 class="mb-2">Medications</h3>
+              <h3 class="mb-2">Nutrients</h3>
               <p class="pageheader-text">
                 Proin placerat ante duiullam scelerisque a velit ac porta, fusce
                 sit amet vestibulum mi. Morbi lobortis pulvinar quam.
               </p>
               <div class="page-breadcrumb">
-                <nav aria-label="breadcrumb">
-                  <ol class="breadcrumb">
-                  </ol>
-                </nav>
+                <nav aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
               </div>
             </div>
           </div>
@@ -120,8 +116,8 @@
                   <input
                     class="form-control form-control-lg"
                     type="search"
-                    id="medicine"
-                    placeholder="Medicine Name"
+                    id="nutrients"
+                    placeholder="What did you eat today?"
                     aria-label="Search"
                   />
                   <button class="btn btn-primary search-btn" id="submit">
@@ -213,155 +209,76 @@
 <script>
   $("#submit").click(function(e) {
     e.preventDefault();
-    var medicineName = $("#medicine").val();
+    var meal = $("#nutrients").val();
     var data = {};
     htmlStr = "";
-    data["text"] = medicineName;
+    data["meal"] = meal;
     data["csrfmiddlewaretoken"] = "{{ csrf_token }}";
     $.ajaxSetup({
       headers: { "X-CSRFToken": "{{csrf_token}}" }
     });
     $.ajax({
       type: "POST",
-      url: "api/prescription/",
+      url: "api/nutrient/",
       data: data,
       success: function(data) {
-        var indicationUsage = data.results[0].indications_and_usage;
-        var dosageAdmin = data.results[0].dosage_and_administration;
-        var description = data.results[0].description;
-        var infoPatient = data.results[0].information_for_patients;
-        var overDosage = data.results[0].overdosage;
         htmlStr +=
           '<div class="card"> \
-              <div class="card-body"> \
-                <div class="row justify-content-center"> \
-                  <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12"> \
-                    <div class="pl-xl-3"> \
-                      <div class="m-b-0"> \
-                        <div class="user-avatar-name d-inline-block"> \
-                          <h2 class="font-24 m-b-10">Indications and Usage</h2> \
-                        </div> \
-                      </div> \
-                    </div> \
-                  </div> \
-                  <div \
-                    class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12" \
-                  ></div> \
-                </div> \
-              </div> \
-              <div class="border-top user-social-box"> \
-                <div class="user-social-media d-xl-inline-block "> \
-                  <span>' +
-          indicationUsage +
-          "</span> \
-                </div> \
-              </div> \
-            </div>";
-        htmlStr +=
-          '<div class="card"> \
-              <div class="card-body"> \
-                <div class="row justify-content-center"> \
-                  <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12"> \
-                    <div class="pl-xl-3"> \
-                      <div class="m-b-0"> \
-                        <div class="user-avatar-name d-inline-block"> \
-                          <h2 class="font-24 m-b-10">Dosage and Administration</h2> \
-                        </div> \
-                      </div> \
-                    </div> \
-                  </div> \
-                  <div \
-                    class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12" \
-                  ></div> \
-                </div> \
-              </div> \
-              <div class="border-top user-social-box"> \
-                <div class="user-social-media d-xl-inline-block "> \
-                  <span>' +
-          dosageAdmin +
-          "</span> \
-                </div> \
-              </div> \
-            </div>";
-        htmlStr +=
-          '<div class="card"> \
-              <div class="card-body"> \
-                <div class="row justify-content-center"> \
-                  <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12"> \
-                    <div class="pl-xl-3"> \
-                      <div class="m-b-0"> \
-                        <div class="user-avatar-name d-inline-block"> \
-                          <h2 class="font-24 m-b-10">Description</h2> \
-                        </div> \
-                      </div> \
-                    </div> \
-                  </div> \
-                  <div \
-                    class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12" \
-                  ></div> \
-                </div> \
-              </div> \
-              <div class="border-top user-social-box"> \
-                <div class="user-social-media d-xl-inline-block "> \
-                  <span>' +
-          description +
-          "</span> \
-                </div> \
-              </div> \
-            </div>";
-        htmlStr +=
-          '<div class="card"> \
-              <div class="card-body"> \
-                <div class="row justify-content-center"> \
-                  <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12"> \
-                    <div class="pl-xl-3"> \
-                      <div class="m-b-0"> \
-                        <div class="user-avatar-name d-inline-block"> \
-                          <h2 class="font-24 m-b-10">Information for Patients</h2> \
-                        </div> \
-                      </div> \
-                    </div> \
-                  </div> \
-                  <div \
-                    class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12" \
-                  ></div> \
-                </div> \
-              </div> \
-              <div class="border-top user-social-box"> \
-                <div class="user-social-media d-xl-inline-block "> \
-                  <span>' +
-          infoPatient +
-          "</span> \
-                </div> \
-              </div> \
-            </div>";
-        htmlStr +=
-          '<div class="card"> \
-              <div class="card-body"> \
-                <div class="row justify-content-center"> \
-                  <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12"> \
-                    <div class="pl-xl-3"> \
-                      <div class="m-b-0"> \
-                        <div class="user-avatar-name d-inline-block"> \
-                          <h2 class="font-24 m-b-10">Overdosage</h2> \
-                        </div> \
-                      </div> \
-                    </div> \
-                  </div> \
-                  <div \
-                    class="col-xl-3 col-lg-12 col-md-12 col-sm-12 col-12" \
-                  ></div> \
-                </div> \
-              </div> \
-              <div class="border-top user-social-box"> \
-                <div class="user-social-media d-xl-inline-block "> \
-                  <span style="text-align:">' +
-          overDosage +
-          "</span> \
-                </div> \
-              </div> \
-            </div>";
-        $("#insertdata").html(htmlStr).fadeIn();
+                  <h5 class="card-header">Nutritional Info about your diet</h5>\
+                  <div class="card-body p-0">\
+                      <div class="table-responsive">\
+                          <table class="table">\
+                              <thead class="bg-light" style="font-size:0.8em;">\
+                                  <tr class="border-0">\
+                                      <th class="border-0">Food List</th>\
+                                      <th class="border-0">' +
+          data.foodlist +
+          '</th>\
+                                  <tr class="border-0">\
+                                  <td>Calories</td>\
+                                  <td>' +
+          data.calories +
+          '</td>\
+                                  </tr>\
+                                  <tr class="border-0">\
+                                      <th class="border-0">fat</th>\
+                                      <th class="border-0">' +
+          data.fat +
+          '</th>\
+                                  <tr class="border-0">\
+                                  <td>Sugars</td>\
+                                  <td>'+ data.sugars +'</td>\
+                                  </tr>\
+                                  <tr class="border-0">\
+                                      <th class="border-0">Protein</th>\
+                                      <th class="border-0">'+ data.protein +'</th>\
+                                  <tr class="border-0">\
+                                  <td>Carbohydrates</td>\
+                                  <td>'+ data.carbohydrates +'</td>\
+                                  </tr>\
+                                  <tr class="border-0">\
+                                      <th class="border-0">Vitamin A</th>\
+                                      <th class="border-0">'+ data.vitamina +'</th>\
+                                  <tr class="border-0">\
+                                  <td>Vitamin B Complex</td>\
+                                  <td>'+ data.vitaminbcomplex +'</td>\
+                                  </tr>\
+                                  <tr class="border-0">\
+                                      <th class="border-0">Vitamin C</th>\
+                                      <th class="border-0">'+ data.vitaminc +'</th>\
+                                  <tr class="border-0">\
+                                  <td>Vitamin D</td>\
+                                  <td>'+ data.vitamind +'</td>\
+                                  </tr>\
+                                  <tr class="border-0">\
+                                      <th class="border-0">Vitamin E</th>\
+                                      <th class="border-0">'+ data.vitamine +'</th>\
+                              </thead>\
+                          </table>\
+                      </div>\
+                  </div>\
+              </div>';
+        $("#insertdata").html(htmlStr);
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         console.log("error");

@@ -11,7 +11,7 @@ from rest_framework.status import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
-from .models import Nutrient, Record, Symptomrecord, Diseaserecord
+from .models import Nutrient, Record, Symptomrecord, Diseaserecord, Foodrecord, Foodlist
 from .serializers import NutrientsSerializer
 from rest_framework.views import APIView
 from rest_framework import permissions, status
@@ -33,6 +33,11 @@ def search(symptom):
         api = infermedica_api.get_api()
         data = api.search(symptom["orth"])
         return data
+
+def nutrients(request):
+    if request.user.is_authenticated():
+        return render(request, 'drug/nutrients.html', {})
+    return redirect('accounts/login')
 
 class Prescription(APIView):
     @csrf_exempt
@@ -204,7 +209,7 @@ class NutrientsApi(APIView):
     def post(self, request):
         request_data = request.data.copy()
         request_data["user"] = request.user.pk
-        mealval = request_data.get('meal','')
+        mealval = request_data.get('meal')
         data = {
             "query":mealval,
             "timezone": "US/Eastern"
@@ -234,23 +239,29 @@ class NutrientsApi(APIView):
             vitc+=nutlist[33]["value"]
             vitd+=nutlist[29]["value"]
             vite+=nutlist[27]["value"]
+        
+        foodrecord = Foodrecord(user=request.user,search_query=mealval,calories=calories,fat=fat,sugars=sugar,protein=protein,carbohydrates=carbs,vitamina=vita,vitaminbcomplex=vitb,vitaminc=vitc,vitamind=vitd,vitamine=vite)
+        foodrecord.save()
+        for fooditem in result.json()["foods"]:
+            foodlistobj = Foodlist(food_record=foodrecord,food_item=fooditem["food_name"])
+            foodlistobj.save()
 
         response = {
-            "Food List":foodlist,
-            "Calories":calories,
-            "Fat":fat,
-            "Sugars":sugar,
-            "Protein":protein,
-            "Carbohydrates":carbs,
-            "Vitamin A":vita,
-            "Vitamin B Complex":vitb,
-            "Vitamin C":vitc,
-            "Vitamin D":vitd,
-            "Vitamin E":vite
+            "foodlist":foodlist,
+            "calories":calories,
+            "fat":fat,
+            "sugars":sugar,
+            "protein":protein,
+            "carbohydrates":carbs,
+            "vitamina":vita,
+            "vitaminbcomplex":vitb,
+            "vitaminc":vitc,
+            "vitamind":vitd,
+            "vitamine":vite
         }
 
-        nserializer = NutrientsSerializer(data=request.data)
-        if nserializer.is_valid():
-            nserializer.save()
-            return Response(response, status=status.HTTP_200_OK)
-        return Response(nserializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # nserializer = NutrientsSerializer(data=request.data)
+        # if nserializer.is_valid():
+            # nserializer.save()
+        return Response(response, status=status.HTTP_200_OK)
+        # return Response(nserializer.errors, status=status.HTTP_400_BAD_REQUEST)
