@@ -9,15 +9,17 @@ import {
 } from "react-bootstrap";
 
 import { Mutation } from "react-apollo";
-import { ADD_POST } from "../Queries";
+import { ADD_POST, GET_POSTS } from "../Queries";
 
 class Createpost extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      postdata: ""
+      postdata: "",
+      postuser: ""
     };
   }
+
   render() {
     return (
       <Mutation mutation={ADD_POST}>
@@ -28,9 +30,8 @@ class Createpost extends Component {
                 onSubmit={e => {
                   e.preventDefault();
                   insert_forum({
-                    variables: { post: this.state.postdata, author: "anupam" }
+                    variables: { post: this.state.postdata, author: this.state.postuser }, refetchQueries: [{query:GET_POSTS}]
                   });
-                  console.log("executed");
                 }}
               >
                 <Row className="show-grid">
@@ -42,6 +43,14 @@ class Createpost extends Component {
                         }
                         type="text"
                         placeholder="Create a post"
+                      />
+                      <br/>
+                      <FormControl
+                        onChange={e =>
+                          this.setState({ postuser: e.target.value })
+                        }
+                        type="text"
+                        placeholder="Name"
                       />
                     </FormGroup>
                   </Col>

@@ -10,7 +10,7 @@ export const ADD_POST = gql`
 
 export const GET_POSTS = gql`
   {
-    forum {
+    forum (order_by: {id: desc}) {
       id
       post
       author

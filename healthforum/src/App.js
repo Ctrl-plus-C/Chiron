@@ -13,8 +13,6 @@ class App extends Component {
         <Createpost/>
         <hr/>
         <Fetchposts/>
-        <hr/>
-        <Auth/>
       </div>
     );
   }

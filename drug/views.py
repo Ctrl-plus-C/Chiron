@@ -24,8 +24,8 @@ def login(request):
     if not user:
         return Response({'error': 'Invalid Credentials'},
                         status=HTTP_404_NOT_FOUND)
-    token, _ = Token.objects.get_or_create(user=user)
-    return Response({'token': token.key},
+    token, restdetails = Token.objects.get_or_create(user=user)
+    return Response({'token': token.key, "hasuraid": user.id},
                     status=HTTP_200_OK)
 
 @csrf_exempt

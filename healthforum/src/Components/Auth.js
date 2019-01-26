@@ -7,27 +7,8 @@ class Auth extends Component {
       username: "",
       password: ""
     };
-
-    this.loginUser = this.loginUser.bind(this);
   }
 
-  loginUser(e) {
-    e.preventDefault();
-    fetch("http://127.0.0.1:8000/api/login", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        username: this.state.username,
-        password: this.state.password
-      })
-    })
-    .then(res => res.json())
-    .then(resdata => localStorage.setItem('authToken', resdata.token));
-    console.log(localStorage.getItem('authToken'));
-  }
   render() {
     return (
       <div className="Login">
