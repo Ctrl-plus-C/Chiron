@@ -1,0 +1,55 @@
+{% extends "drug/base.html" %}
+{% load staticfiles %}
+{% block title %}
+Home page
+{% endblock %}
+{% block content %}
+<div class="splash-container" style="margin-top:10em;">
+    <div class="card ">
+        <div class="card-header text-center"><a href="../index.html">Login</a><span class="splash-description">Please enter your user information.</span></div>
+        <div class="card-body">
+            <form>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" id="username" type="text" placeholder="Username" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <input class="form-control form-control-lg" id="password" type="password" placeholder="Password">
+                </div>
+                <button id="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
+            </form>
+        </div>
+        <div class="card-footer bg-white p-0  ">
+            <div class="card-footer-item card-footer-item-bordered">
+                <a href="#" class="footer-link">Create An Account</a></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+$("#submit").click(function (event) {
+    console.log("a");
+    event.preventDefault();
+    var username = $('#username').val();
+    var password = $('#password').val();
+    var data = {};
+    data["username"] = username;
+    data["password"] = password;
+    $.ajax({
+        type: "POST",
+        url: "/api/login/",
+        data: data,
+        success: function (token) {
+            console.log(token.token);
+            localStorage.setItem('authToken', token.token);
+            window.location = '/';
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log("error");
+            // var error = XMLHttpRequest.responseJSON;
+            // $('#bulkerror').html(String(errorThrown) + "<br>" + String(textStatus) + '<br>' + error.message);
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -21,6 +21,11 @@ import infermedica_api
 import requests,json
 infermedica_api.configure(app_id='945555e1', app_key='be2ee424c225c567086a084637a359de')
 
+def home(request):
+    return render(request, 'drug/home.html',{})
+
+def loginpage(request):
+    return render(request, 'drug/login.html', {})
 
 def search(symptom):
         api = infermedica_api.get_api()
