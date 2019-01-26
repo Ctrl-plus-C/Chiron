@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'api/condition', views.Condition.as_view(), name='condition'),
     url(r'api/symptom', views.Symptom.as_view(), name='symptom'),
     url(r'api/diagnose', views.Diagnosis.as_view(), name='diagnose'),
-    url(r'^medication$/', views.medication, name="medication"),
+    url(r'^medication/$', views.medication, name="medication"),
     url(r'api/prescription', views.Prescription.as_view(), name='prescription'),
     url(r'^login/$', views.loginpage, name="loginpage"),
     
