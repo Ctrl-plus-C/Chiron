@@ -1,25 +1,20 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import Navbarhealth from "./Components/Navbarhealth";
+import Createpost from "./Components/Createpost";
+import Fetchposts from "./Components/Fetchposts";
+import Auth from "./Components/Auth";
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Navbarhealth/>
+        <Createpost/>
+        <hr/>
+        <Fetchposts/>
+        <hr/>
+        <Auth/>
       </div>
     );
   }

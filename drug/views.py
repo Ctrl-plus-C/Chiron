@@ -33,3 +33,4 @@ def login(request):
 def sample_api(request):
     data = {'sample_data': 123}
     return Response(data, status=HTTP_200_OK)
+    
