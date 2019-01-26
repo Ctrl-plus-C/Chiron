@@ -10,6 +10,5 @@ urlpatterns = [
     url(r'api/parse', views.ParseD.as_view(), name='gete'),
     url(r'api/condition', views.Condition.as_view(), name='gete'),
     url(r'api/symptom', views.Symptom.as_view(), name='gete'),
-    url(r'api/risk', views.RiskFactor.as_view(), name='gete'),
-    url(r'api/diagonisis', views.RiskFactor.as_view(), name='gete'),
+    url(r'api/diagonisis', views.Diagnosis.as_view(), name='gete'),
 ]

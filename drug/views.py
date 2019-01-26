@@ -38,7 +38,7 @@ class ParseD(APIView):
             mysymptomlist["orth"] = data["orth"]
             mysymptomlist["id"] = data["id"]
         
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         callsearchdata = api.search(mysymptomlist)
         
         return Response(callsearchdata, status=status.HTTP_200_OK)
@@ -61,50 +61,31 @@ class Diagnosis(APIView):
         api = infermedica_api.get_api()
         re = infermedica_api.Diagnosis(sex=request.data.get("sex"), age=request.data.get("age"))
         
-        import pdb; pdb.set_trace()
-        re.add_symptom('s_21', 'present', initial=True)
-        re.add_symptom('s_98', 'present', initial=True)
-        re.add_symptom('s_107', 'absent')
+        # import pdb; pdb.set_trace()
+        re.add_symptom(s_id, 'present', initial=True)
+        # re.add_symptom('s_98', 'present', initial=True)
+        # re.add_symptom('s_107', 'absent')
 
-        re= api.diagnosis(re)
-        return Response({"test":re}, status=status.HTTP_200_OK)
+        re= api.diagnosis(re).to_dict()
+        import pdb; pdb.set_trace()
+        return Response({"test":re["conditions"]}, status=status.HTTP_200_OK)
         
     # call diagnosis
         
 
-
 class Symptom(APIView):
-    def post(self,request,skey,sindex):
-        api = infermedica_api.API(app_id='945555e1', app_key='be2ee424c225c567086a084637a359de')
-
-        if skey == 1: #symptom-list
-            data = api.symptoms_list()
-        elif skey == 2: #detail og particular symptom
-            data = api.symptom_details(sindex)
+    def post(self,request):
+        api = infermedica_api.get_api()
         
+        response = api.parse(sentence).to_dict()["mentions"]
+        # import pdb; pdb.set_trace()
+        mysymptomlist = {}
+        for data in response:
+            mysymptomlist["orth"] = data["orth"]
+            mysymptomlist["id"] = data["id"]
+            data.append(api.symptom_details(mysymptomlist["id"]))
+            
         return Response({"test":data},status=status.HTTP_200_OK)
-
-class RiskFactor(APIView):
-    def post(self,request,rkey,rindex):
-        api = infermedica_api.API(app_id='945555e1', app_key='be2ee424c225c567086a084637a359de')
-
-        if rkey == 1: #symptom-list
-            data = api.risk_factors_list()
-        elif rkey == 2: #detail og particular symptom
-            data = api.risk_factors_details(rindex)
-        
-        return Response({"test":data},status=status.HTTP_200_OK)
-
-
-
-
-
-
-        
-
-
-
-    
 
 @csrf_exempt
 @api_view(["POST"])
