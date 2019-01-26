@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
@@ -22,7 +22,9 @@ import requests,json
 infermedica_api.configure(app_id='945555e1', app_key='be2ee424c225c567086a084637a359de')
 
 def home(request):
-    return render(request, 'drug/home.html',{})
+    if request.user.is_authenticated():
+        return render(request, 'drug/home.html',{})
+    return redirect('accounts/login')
 
 def loginpage(request):
     return render(request, 'drug/login.html', {})
@@ -32,7 +34,9 @@ def search(symptom):
         data = api.search(symptom["orth"])
         return data
 
+
 class ParseD(APIView):
+    @csrf_exempt
     def post(self,request):
         sentence = request.data.get("text")
         api = infermedica_api.get_api()
@@ -48,7 +52,9 @@ class ParseD(APIView):
         
         return Response(callsearchdata, status=status.HTTP_200_OK)
 
+
 class Condition(APIView):
+    @csrf_exempt
     def post(self, request):
         api = infermedica_api.API(app_id='945555e1', app_key='be2ee424c225c567086a084637a359de')
         # r = infermedica_api.Diagnosis(app_id='945555e1', app_key='be2ee424c225c567086a084637a359de')
@@ -59,7 +65,9 @@ class Condition(APIView):
 
 # class Search(APIView):
 
+
 class Diagnosis(APIView):
+    @csrf_exempt
     def post(self,request):
         orth = request.data.get("orth")
         s_id = request.data.get("id")
@@ -79,6 +87,7 @@ class Diagnosis(APIView):
         
 
 class Symptom(APIView):
+    @csrf_exempt
     def post(self,request):
         api = infermedica_api.get_api()
         
@@ -91,7 +100,6 @@ class Symptom(APIView):
             data.append(api.symptom_details(mysymptomlist["id"]))
             
         return Response({"test":data},status=status.HTTP_200_OK)
-import requests
 
 # @csrf_exempt
 # @api_view(["POST"])
@@ -116,21 +124,20 @@ import requests
 #     data = {'sample_data': 123}
 #     return Response(data, status=HTTP_200_OK)
 
+
 class HeartRateApi(APIView):
+    @csrf_exempt
     def get(self, request):
-        logger.info('Get request initiated.')
         try:
             heartrate = HeartRate.objects.all()
             hserializer = HeartRateSerializer(heartrate)
             heartrate_data = hserializer.data
-            logger.info("Request completed\nRequest status code: 200\nData: " + str(heartrate_data))
             return Response(heartrate_data, status=status.HTTP_200_OK)
         except:
-            logger.error('No details found for given date')
             return Response({'success': False, 'message': 'No details found for given date'}, status=status.HTTP_400_BAD_REQUEST)
     
+    @csrf_exempt
     def post(self, request, user):
-        logger.info('Update request initiated.')
         request_data = request.data.copy()
         request_data['user'] = user
         singleroomaval = request_data.get('singleroomaval','')
@@ -148,25 +155,22 @@ class HeartRateApi(APIView):
             bserializer = BookingSerializer(data=request_data)
         if bserializer.is_valid():
             bserializer.save()
-            logger.info('Request completed\nRequest status code: 200\nData: ' + str(bserializer.data))
             return Response(bserializer.data, status=status.HTTP_200_OK)
-        logger.error(bserializer.errors)
         return Response(bserializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class NutrientsApi(APIView):
+    @csrf_exempt
     def get(self, request):
-        logger.info('Get request initiated.')
         try:
             nutrients = Nutrient.objects.all()
             nserializer = NutrientsSerializer(nutrients)
             nutrient_data = nserializer.data
-            logger.info("Request completed\nRequest status code: 200\nData: " + str(nutrient_data))
             return Response(nutrient_data, status=status.HTTP_200_OK)
         except:
-            logger.error('No details found for given date')
             return Response({'success': False, 'message': 'No details found for given date'}, status=status.HTTP_400_BAD_REQUEST)
-
+    
+    @csrf_exempt
     def post(self, request):
         request_data = request.data.copy()
         request_data["user"] = request.user.pk
