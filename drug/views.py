@@ -30,6 +30,7 @@ def loginpage(request):
     return render(request, 'drug/login.html', {})
 
 def search(symptom):
+        import pdb; pdb.set_trace()
         api = infermedica_api.get_api()
         data = api.search(symptom["orth"])
         return data
@@ -41,23 +42,25 @@ class ParseD(APIView):
         sentence = request.data.get("text")
         api = infermedica_api.get_api()
         response = api.parse(sentence).to_dict()["mentions"]
-        # import pdb; pdb.set_trace()
-        mysymptomlist = {}
+        mysymptomlist = []
+        templist = {}
+        print("reached templist")
         for data in response:
-            mysymptomlist["orth"] = data["orth"]
-            mysymptomlist["id"] = data["id"]
-        
-        # import pdb; pdb.set_trace()
-        callsearchdata = api.search(mysymptomlist)
-        
-        return Response(callsearchdata, status=status.HTTP_200_OK)
+            templist["orth"] = data["orth"]
+            templist["id"] = data["id"]
+            mysymptomlist.append(templist.copy())
 
-class Prescription(APIView):
-    def post(self,request):
-        sentence = request.data.get("medicname")
-        data = requests.get("https://api.fda.gov/drug/label.json?search=paracetamol").json()
-        return Response({"prescription":data},status=status.HTTP_200_OK)
+        finalsearchdata = []
+        print("reached finalserach")
+        for symptom in mysymptomlist:
+            callsearchdata = api.search(symptom['orth'])
+            finalsearchdata.extend(callsearchdata)
+        finaldict = {}
+        print("conversion")
+        for dictdata in finalsearchdata:
+            finaldict[dictdata['label']] = dictdata['id']
 
+        return Response(finaldict, status=status.HTTP_200_OK)
 
 class Condition(APIView):
     @csrf_exempt
@@ -75,19 +78,18 @@ class Condition(APIView):
 class Diagnosis(APIView):
     @csrf_exempt
     def post(self,request):
-        orth = request.data.get("orth")
-        s_id = request.data.get("id")
+        present_symptoms = request.data.getlist('choices[]')
+        absent_symptoms = request.data.getlist('unchoices[]')
         api = infermedica_api.get_api()
-        re = infermedica_api.Diagnosis(sex=request.data.get("sex"), age=request.data.get("age"))
-        
-        # import pdb; pdb.set_trace()
-        re.add_symptom(s_id, 'present', initial=True)
-        # re.add_symptom('s_98', 'present', initial=True)
-        # re.add_symptom('s_107', 'absent')
+        re = infermedica_api.Diagnosis(sex=request.data.get("gender"), age=request.data.get("age"))
+
+        for symptom in present_symptoms:            
+            re.add_symptom(symptom, 'present')
+        for symptom in absent_symptoms:
+            re.add_symptom(symptom, 'absent')
 
         re= api.diagnosis(re).to_dict()
-        import pdb; pdb.set_trace()
-        return Response({"test":re["conditions"]}, status=status.HTTP_200_OK)
+        return Response({"test":re}, status=status.HTTP_200_OK)
         
     # call diagnosis
         
