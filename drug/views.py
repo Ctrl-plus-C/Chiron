@@ -52,6 +52,12 @@ class ParseD(APIView):
         
         return Response(callsearchdata, status=status.HTTP_200_OK)
 
+class Prescription(APIView):
+    def post(self,request):
+        sentence = request.data.get("medicname")
+        data = requests.get("https://api.fda.gov/drug/label.json?search=paracetamol").json()
+        return Response({"prescription":data},status=status.HTTP_200_OK)
+
 
 class Condition(APIView):
     @csrf_exempt
@@ -100,6 +106,8 @@ class Symptom(APIView):
             data.append(api.symptom_details(mysymptomlist["id"]))
             
         return Response({"test":data},status=status.HTTP_200_OK)
+
+
 
 # @csrf_exempt
 # @api_view(["POST"])
