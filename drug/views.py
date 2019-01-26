@@ -11,7 +11,7 @@ from rest_framework.status import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
-from .models import Nutrient
+from .models import Nutrient, Record, Symptomrecord, Diseaserecord
 from .serializers import NutrientsSerializer
 from rest_framework.views import APIView
 from rest_framework import permissions, status
@@ -30,7 +30,6 @@ def loginpage(request):
     return render(request, 'drug/login.html', {})
 
 def search(symptom):
-        import pdb; pdb.set_trace()
         api = infermedica_api.get_api()
         data = api.search(symptom["orth"])
         return data
@@ -53,6 +52,8 @@ class ParseD(APIView):
     @csrf_exempt
     def post(self,request):
         sentence = request.data.get("text")
+        dbrow = Record(user=request.user,search_query=sentence)
+        dbrow.save()
         api = infermedica_api.get_api()
         response = api.parse(sentence).to_dict()["mentions"]
         mysymptomlist = []
@@ -72,7 +73,8 @@ class ParseD(APIView):
         print("conversion")
         for dictdata in finalsearchdata:
             finaldict[dictdata['label']] = dictdata['id']
-
+            symprow = Symptomrecord(user_record=dbrow,present_symptoms=dictdata['label'],present_symptoms_id=dictdata['id'])
+            symprow.save()
         return Response(finaldict, status=status.HTTP_200_OK)
 
 class Condition(APIView):
@@ -93,6 +95,8 @@ class Diagnosis(APIView):
     def post(self,request):
         present_symptoms = request.data.getlist('choices[]')
         absent_symptoms = request.data.getlist('unchoices[]')
+        query_text = request.data.get('queryText')
+        recordobject = Record.objects.get(user=request.user,search_query=query_text)
         api = infermedica_api.get_api()
         re = infermedica_api.Diagnosis(sex=request.data.get("gender"), age=request.data.get("age"))
 
@@ -102,6 +106,9 @@ class Diagnosis(APIView):
             re.add_symptom(symptom, 'absent')
 
         re= api.diagnosis(re).to_dict()
+        for dictdata in re['conditions']:
+            diseaseobject = Diseaserecord(user_record=recordobject, probable_diseases=dictdata['name'], probable_diseases_id=dictdata['id'])
+            diseaseobject.save()
         return Response({"test":re}, status=status.HTTP_200_OK)
         
     # call diagnosis

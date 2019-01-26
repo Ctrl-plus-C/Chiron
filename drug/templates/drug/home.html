@@ -14,7 +14,7 @@
   <!-- ============================================================== -->
   <div class="dashboard-header">
     <nav class="navbar navbar-expand-lg bg-white fixed-top">
-      <a class="navbar-brand" href="index.html">Health Wellness</a>
+      <a class="navbar-brand" href="index.html"><img class="img-responsive" style="width:30%;" src="{% static 'chiron.png' %}"></a>
       <button
         class="navbar-toggler"
         type="button"
@@ -208,10 +208,12 @@
 <!-- dashboard js -->
 <script src="{% static 'js/dashboard-influencer.js' %}"></script>
 <script>
+    queryText = "";
   $("#submit").click(function(event) {
     console.log("clicked");
     event.preventDefault();
     var userQuery = $("#wellnessquestion").val();
+    queryText = userQuery;
     data = {};
     data["text"] = userQuery;
     data["csrfmiddlewaretoken"] = "{{ csrf_token }}";
@@ -249,7 +251,6 @@
 </script>
 <script>
   $("body").on('click', '#diagnose' , function(event){
-    console.log("clicked");
     event.preventDefault();
     var selectedOnes = [];
     var unselectedOnes = [];
@@ -267,6 +268,7 @@
     data["gender"] = gender;
     data["age"] = age;
     data["csrfmiddlewaretoken"] = "{{ csrf_token }}";
+    data['queryText'] = queryText;
     $.ajaxSetup({
       headers: { "X-CSRFToken": "{{csrf_token}}" }
     });
