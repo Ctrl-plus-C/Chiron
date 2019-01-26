@@ -35,6 +35,15 @@ def search(symptom):
         data = api.search(symptom["orth"])
         return data
 
+class Prescription(APIView):
+    @csrf_exempt
+    def post(self,request):
+        medicname = request.data.get("text")
+        # import pdb; pdb.set_trace()
+        data = requests.get("https://api.fda.gov/drug/label.json?search="+medicname).json()
+        
+
+        return Response(data, status=status.HTTP_200_OK)
 
 class ParseD(APIView):
     @csrf_exempt
