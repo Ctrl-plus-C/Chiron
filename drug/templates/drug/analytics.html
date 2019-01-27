@@ -49,35 +49,45 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav flex-column">
-            <li class="nav-divider">Menu</li>
-            <li class="nav-item ">
-              <a class="nav-link" href="#"
-                ><i class="fa fa-fw fa-user-circle"></i>Diagnosis
-                <span class="badge badge-success">6</span></a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"
-                ><i class="fa fa-fw fa-rocket"></i>Medication</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"
-                ><i class="fas fa-fw fa-chart-pie"></i>Nutrition</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"
-                ><i class="fas fa-fw fa-chart-pie"></i>Self Diary</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="#"
-                ><i class="fas fa-fw fa-chart-pie"></i>Analytics</a
-              >
-            </li>
-          </ul>
+                <ul class="navbar-nav flex-column">
+                        <li class="nav-divider">Menu</li>
+                        <li class="nav-item ">
+                          <a
+                            class="nav-link active"
+                            href="{% url 'home' %}"
+                            ><i class="fa fa-fw fa-user-circle"></i>Diagnosis
+                            <span class="badge badge-success">6</span></a
+                          >
+                        </li>
+                        <li class="nav-item">
+                          <a
+                            class="nav-link"
+                            href="{% url 'medication' %}"
+                            ><i class="fa fa-fw fa-rocket"></i>Medication</a
+                          >
+                        </li>
+                        <li class="nav-item">
+                            <a
+                              class="nav-link"
+                              href="{% url 'nutrients' %}"
+                              ><i class="fa fa-fw fa-rocket"></i>Nutrients</a
+                            >
+                          </li>
+                          <li class="nav-item">
+                              <a
+                                class="nav-link"
+                                href="{% url 'selfdiarya' %}"
+                                ><i class="fa fa-fw fa-rocket"></i>Self Diary</a
+                              >
+                            </li>
+                          <li class="nav-item">
+                              <a
+                                class="nav-link"
+                                href="{% url 'analytics' %}"
+                                ><i class="fa fa-fw fa-rocket"></i>Analytics</a
+                              >
+                            </li>
+                      </ul>
         </div>
       </nav>
     </div>
@@ -90,7 +100,7 @@
       <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
           <div class="page-header">
-            <h2 class="pageheader-title">Chartist.js</h2>
+            <h2 class="pageheader-title">Insight of your wellbeing</h2>
             <p class="pageheader-text">
               Proin placerat ante duiullam scelerisque a velit ac porta, fusce
               sit amet vestibulum mi. Morbi lobortis pulvinar quam.
@@ -110,7 +120,7 @@
         <!-- ============================================================== -->
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
           <div class="card">
-            <h5 class="card-header">Simple Line Chart</h5>
+            <h5 class="card-header">Nutrition Value compared with food items taken</h5>
             <div class="card-body">
               <div class="ct-chart-line ct-golden-section"></div>
             </div>

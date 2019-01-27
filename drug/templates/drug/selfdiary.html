@@ -50,30 +50,45 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav flex-column">
-            <li class="nav-divider">Menu</li>
-            <li class="nav-item ">
-              <a class="nav-link" href="{% url 'home' %}"
-                ><i class="fa fa-fw fa-user-circle"></i>Diagnosis
-                <span class="badge badge-success">6</span></a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'medication' %}"
-                ><i class="fa fa-fw fa-rocket"></i>Medication</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'nutrients' %}"
-                ><i class="fa fa-fw fa-rocket"></i>Nutrients</a
-              >
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'nutrients' %}"
-                ><i class="fa fa-fw fa-rocket"></i>Self Diary</a
-              >
-            </li>
-          </ul>
+            <ul class="navbar-nav flex-column">
+                <li class="nav-divider">Menu</li>
+                <li class="nav-item ">
+                  <a
+                    class="nav-link active"
+                    href="{% url 'home' %}"
+                    ><i class="fa fa-fw fa-user-circle"></i>Diagnosis
+                    <span class="badge badge-success">6</span></a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    href="{% url 'medication' %}"
+                    ><i class="fa fa-fw fa-rocket"></i>Medication</a
+                  >
+                </li>
+                <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      href="{% url 'nutrients' %}"
+                      ><i class="fa fa-fw fa-rocket"></i>Nutrients</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                      <a
+                        class="nav-link"
+                        href="{% url 'selfdiarya' %}"
+                        ><i class="fa fa-fw fa-rocket"></i>Self Diary</a
+                      >
+                    </li>
+                  <li class="nav-item">
+                      <a
+                        class="nav-link"
+                        href="{% url 'analytics' %}"
+                        ><i class="fa fa-fw fa-rocket"></i>Analytics</a
+                      >
+                    </li>
+              </ul>
         </div>
       </nav>
     </div>
