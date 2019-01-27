@@ -34,6 +34,8 @@ React|Django|GraphQL|Hasura|Zulip|Python|JavaScript|
     - Download the bot's zuliprc and save it in your home directory as `.zuliprc`.
 * Run the Bot using `python3 bot.py`.
 
+![](./Images/zulip2.png)
+
 
 
 Developed by Ctrl-plus-C for Hack36 2019
