@@ -1,0 +1,391 @@
+{% extends 'drug/base.html' %} {% load staticfiles %} {% block extend_head %}
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/charts/chartist-bundle/chartist.css' %}"
+/>
+{% endblock %} {% block content %}
+<!-- ============================================================== -->
+<!-- main wrapper -->
+<!-- ============================================================== -->
+<div class="dashboard-main-wrapper">
+  <!-- ============================================================== -->
+  <!-- navbar -->
+  <!-- ============================================================== -->
+  <div class="dashboard-header">
+    <nav class="navbar navbar-expand-lg bg-white fixed-top">
+      <a class="navbar-brand" href="../index.html">Concept</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </nav>
+  </div>
+  <!-- ============================================================== -->
+  <!-- end navbar -->
+  <!-- ============================================================== -->
+  <!-- ============================================================== -->
+  <!-- left sidebar -->
+  <!-- ============================================================== -->
+  <div class="nav-left-sidebar sidebar-dark">
+    <div class="menu-list">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="d-xl-none d-lg-none" href="#">Dashboard</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav flex-column">
+            <li class="nav-divider">Menu</li>
+            <li class="nav-item ">
+              <a class="nav-link" href="#"
+                ><i class="fa fa-fw fa-user-circle"></i>Diagnosis
+                <span class="badge badge-success">6</span></a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"
+                ><i class="fa fa-fw fa-rocket"></i>Medication</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"
+                ><i class="fas fa-fw fa-chart-pie"></i>Nutrition</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"
+                ><i class="fas fa-fw fa-chart-pie"></i>Self Diary</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="#"
+                ><i class="fas fa-fw fa-chart-pie"></i>Analytics</a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <div class="dashboard-wrapper">
+    <div class="container-fluid  dashboard-content">
+      <!-- ============================================================== -->
+      <!-- pageheader -->
+      <!-- ============================================================== -->
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="page-header">
+            <h2 class="pageheader-title">Chartist.js</h2>
+            <p class="pageheader-text">
+              Proin placerat ante duiullam scelerisque a velit ac porta, fusce
+              sit amet vestibulum mi. Morbi lobortis pulvinar quam.
+            </p>
+            <div class="page-breadcrumb">
+              <nav aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ============================================================== -->
+      <!-- end pageheader -->
+      <!-- ============================================================== -->
+      <div class="row">
+        <!-- ============================================================== -->
+        <!-- simple line chart  -->
+        <!-- ============================================================== -->
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Simple Line Chart</h5>
+            <div class="card-body">
+              <div class="ct-chart-line ct-golden-section"></div>
+            </div>
+          </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end simple line chart  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- holes in data chart  -->
+        <!-- ============================================================== -->
+        <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Holes In Data</h5>
+            <div class="card-body">
+              <div class="ct-chart-holes ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+        <!-- ============================================================== -->
+        <!-- end holes in data chart  -->
+        <!-- ============================================================== -->
+      </div>
+      <!-- <div class="row"> -->
+      <!-- ============================================================== -->
+      <!-- whole numbers chart  -->
+      <!-- ============================================================== -->
+      <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Whole Numbers</h5>
+            <div class="card-body">
+              <div class="ct-chart-wnumbers ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+      <!-- ============================================================== -->
+      <!-- end whole numbers charts -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!-- line scatter chart  -->
+      <!-- ============================================================== -->
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="card">
+          <h5 class="card-header">
+            Line Scatter Diagram With Responsive Settings
+          </h5>
+          <div class="card-body">
+            <div class="ct-chart-scatter ct-golden-section"></div>
+          </div>
+        </div>
+      </div>
+      <!-- ============================================================== -->
+      <!-- end line scatter chart  -->
+      <!-- ============================================================== -->
+      <!-- </div> -->
+      <!-- <div class="row"> -->
+      <!-- ============================================================== -->
+      <!-- line chart with area  -->
+      <!-- ============================================================== -->
+      <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Line Chart With Area</h5>
+            <div class="card-body">
+              <div class="ct-chart-area ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+      <!-- ============================================================== -->
+      <!-- end line chart with area  -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!-- bi polar chart  -->
+      <!-- ============================================================== -->
+      <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Bi-polar Line Chart With Area Only</h5>
+            <div class="card-body">
+              <div class="ct-chart-polar ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+      <!-- ============================================================== -->
+      <!-- end bi polar chart  -->
+      <!-- ============================================================== -->
+      <!-- </div> -->
+      <!-- <div class="row"> -->
+      <!-- ============================================================== -->
+      <!--stacked bar chart  -->
+      <!-- ============================================================== -->
+      <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Stacked Bar Chart</h5>
+            <div class="card-body">
+              <div class="ct-chart-scatter-bar ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+      <!-- ============================================================== -->
+      <!--end stacked bar chart  -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!--multi line chart  -->
+      <!-- ============================================================== -->
+      <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Multi Line Labels</h5>
+            <div class="card-body">
+              <div class="ct-chart-multilines ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+      <!-- ============================================================== -->
+      <!--end multi line chart  -->
+      <!-- ============================================================== -->
+      <!-- </div>
+      <div class="row"> -->
+      <!-- ============================================================== -->
+      <!--multi line lables chart  -->
+      <!-- ============================================================== -->
+      <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Multi-line Labels</h5>
+            <div class="card-body">
+              <div class="ct-chart-bipolar ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+      <!-- ============================================================== -->
+      <!-- end multi line lables chart  -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!-- peak circle using the draw  -->
+      <!-- ============================================================== -->
+      <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Add Peak Circles Using The Draw Events</h5>
+            <div class="card-body">
+              <div class="ct-chart-events ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+      <!-- ============================================================== -->
+      <!-- end peak circle using the draw  -->
+      <!-- ============================================================== -->
+      <!-- </div>
+      <div class="row"> -->
+      <!-- ============================================================== -->
+      <!-- advanced smill chart  -->
+      <!-- ============================================================== -->
+      <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Advanced Smil Animations</h5>
+            <div class="card-body">
+              <div class="ct-chart-animation ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+      <!-- ============================================================== -->
+      <!-- end advanced smill chart  -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!-- horizontal chart bar  -->
+      <!-- ============================================================== -->
+      <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Horizontal Chart Bar</h5>
+            <div class="card-body">
+              <div class="ct-chart-horizontal ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+      <!-- ============================================================== -->
+      <!-- end horizontal chart bar  -->
+      <!-- ============================================================== -->
+      <!-- </div> -->
+      <!-- <div class="row"> -->
+      <!-- ============================================================== -->
+      <!-- simple pie chart  -->
+      <!-- ============================================================== -->
+      <!-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Simple Pie Chart</h5>
+            <div class="card-body">
+              <div class="ct-chart-pie ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+      <!-- ============================================================== -->
+      <!-- end simple pie chart  -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!-- donut chart  -->
+      <!-- ============================================================== -->
+      <!-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">
+              Donut Chart Using Fill Rather Than Stroke
+            </h5>
+            <div class="card-body">
+              <div class="ct-chart-donut ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+      <!-- ============================================================== -->
+      <!-- end donut chart  -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!-- animations donut chart  -->
+      <!-- ============================================================== -->
+      <!-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+          <div class="card">
+            <h5 class="card-header">Animating A Donut With Svg.animate</h5>
+            <div class="card-body">
+              <div class="ct-chart-animated ct-golden-section"></div>
+            </div>
+          </div>
+        </div> -->
+      <!-- ============================================================== -->
+      <!-- end animations donut chart  -->
+      <!-- ============================================================== -->
+      <!-- </div>
+    </div> -->
+      <!-- ============================================================== -->
+      <!-- footer -->
+      <!-- ============================================================== -->
+      <div class="footer" style="position: fixed;bottom: 0;z-index: 1030;">
+        <div class="container-fluid">
+          <div class="row justify-content-center">
+            <div
+              class="col-xl-6 offset-md-1 col-lg-6 col-md-6 col-sm-12 col-12"
+            >
+              Made with <i class="fa fa-heart" style="color:red;"></i> by team
+              Ctrl plus C
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %} {% block scripts %}
+  <script src="{% static 'vendor/slimscroll/jquery.slimscroll.js' %}"></script>
+  <script src="{% static 'vendor/charts/chartist-bundle/chartist.min.js' %}"></script>
+  <!-- <script src="{% static 'vendor/charts/chartist-bundle/Chartistjs.js' %}"></script> -->
+  <script src="{% static 'js/main-js.js' %}"></script>
+  <script>
+    $(document).ready(function() {
+      if ($(".ct-chart-line").length) {
+        new Chartist.Line(
+          ".ct-chart-line",
+          {
+            labels: ['i ate 2 apple and 3 bananas today.','i had 6 apples and 2 eggs today','i had 6 apples today'],
+
+            series: [
+              [504.34, 710.84, 567.84],
+              [1.79, 11.37, 1.86],
+              [81.11, 113.83, 113.46],
+              [4.81, 15.4, 2.84],
+              [131.12, 151.53, 150.81],
+              [125.1, 270.33, 131.04],
+              [223.48, 948.8, 436.8],
+              [190.32, 294.84, 294.84],
+              [3.54, 540.0, 0e-10],
+              [19.8, 36.064, 36.036]
+            ]
+          },
+          {
+            fullWidth: true,
+            chartPadding: {
+              right: 40
+            },
+            axisY: {}
+          }
+        );
+      }
+    });
+  </script>
+  {% endblock %}
+</div>

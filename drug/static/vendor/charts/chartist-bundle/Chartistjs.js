@@ -4,7 +4,7 @@
 
         if ($('.ct-chart-line').length) {
             new Chartist.Line('.ct-chart-line', {
-                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                labels: ['calories','fat','sugars','protein','carbohydrates','vitamina','vitaminbcomplex','vitaminc','vitamind','vitamine'],
                 series: [
                     [12, 9, 7, 8, 5],
                     [2, 1, 3.5, 7, 3],

@@ -17,5 +17,5 @@ urlpatterns = [
     url(r'api/prescription', views.Prescription.as_view(), name='prescription'),
     url(r'^login/$', views.loginpage, name="loginpage"),
     url(r'api/selfdiary', views.SelfdiaryApi.as_view(), name='selfdiary'),
-    
+    url(r'^analytics/$', views.analytics, name="analytics"),
 ]

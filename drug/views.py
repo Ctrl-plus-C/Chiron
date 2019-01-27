@@ -44,6 +44,11 @@ def selfdiary(request):
         return render(request, 'drug/selfdiary.html', {})
     return redirect('accounts/login')
 
+def analytics(request):
+    if request.user.is_authenticated():
+        return render(request, 'drug/analytics.html', {})
+    return redirect('accounts/login')
+
 class Prescription(APIView):
     @csrf_exempt
     def post(self,request):
