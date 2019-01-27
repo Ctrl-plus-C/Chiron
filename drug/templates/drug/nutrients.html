@@ -143,6 +143,7 @@
                   <button class="btn btn-primary search-btn" id="submit">
                     Search
                   </button>
+                  <div class="loader">Loading</div>
                 </form>
               </div>
             </div>
@@ -228,6 +229,8 @@
 <script src="{% static 'js/main-js.js' %}"></script>
 <script>
   $("#submit").click(function(e) {
+    $('#submit').hide();
+    $('.loader').show();
     e.preventDefault();
     var meal = $("#nutrients").val();
     var data = {};
@@ -298,6 +301,8 @@
                       </div>\
                   </div>\
               </div>';
+        $('.loader').hide();
+        $('#submit').show();
         $("#insertdata").html(htmlStr);
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
