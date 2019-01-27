@@ -24,8 +24,16 @@ React|Django|GraphQL|Hasura|Zulip|Python|JavaScript|
 `source venv/bin/activate`
 * Install all requirements  
 `pip install -r 'requirements.txt'`
+* Do the migrations by running  
+`python manage.py migrate`
+* Create a superuser by running  
+`python manage.py createsuperuser`
 * Run the server  
 `python manage.py runserver`
+* Head over to `http://127.0.0.1:8000/` to start using Chiron.
+
+![](./Images/home.png)
+
  ### Steps to Run Zulip BOT
 * Create a zulip realm on [https://zulipchat.com](https://zulipchat.com)
     - Create a Bot on zulip.
@@ -37,5 +45,9 @@ React|Django|GraphQL|Hasura|Zulip|Python|JavaScript|
 ![](./Images/zulip2.png)
 
 
-
 Developed by Ctrl-plus-C for Hack36 2019
+## Contributors
+1. [Kadambari Anuranjana](https://github.com/Aotoge)
+2. [Anupam Dagar](https://github.com/Anupam-dagar)
+3. [Anshu Yadav](https://github.com/Anshu-ros)
+4. [Lekhika Dugtal](https://github.com/CleverFool77)
