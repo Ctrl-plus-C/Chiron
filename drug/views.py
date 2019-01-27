@@ -114,6 +114,9 @@ class Diagnosis(APIView):
         except AttributeError:
             present_symptoms = request.data.get('choices')
             absent_symptoms = request.data.get('unchoices')
+
+        query_text = request.data.get('queryText')
+        recordobject = Record.objects.get(user=request.user,search_query=query_text)
         api = infermedica_api.get_api()
         re = infermedica_api.Diagnosis(sex=request.data.get("gender"), age=request.data.get("age"))
 

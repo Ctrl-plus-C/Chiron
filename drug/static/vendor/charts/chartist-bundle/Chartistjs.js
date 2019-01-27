@@ -99,7 +99,7 @@
                 },
                 axisY: {
                     labelInterpolationFnc: function(value) {
-                        return '$' + (value / 1000);
+                        return (value / 1000);
                     }
                 }
 

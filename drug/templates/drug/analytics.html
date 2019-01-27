@@ -13,7 +13,7 @@
   <!-- ============================================================== -->
   <div class="dashboard-header">
     <nav class="navbar navbar-expand-lg bg-white fixed-top">
-      <a class="navbar-brand" href="../index.html">Concept</a>
+      <a class="navbar-brand" href="../index.html"><img class="img-responsive" style="width:30%;" src="{% static 'chiron.png' %}"></a>
       <button
         class="navbar-toggler"
         type="button"
@@ -53,7 +53,7 @@
                         <li class="nav-divider">Menu</li>
                         <li class="nav-item ">
                           <a
-                            class="nav-link active"
+                            class="nav-link"
                             href="{% url 'home' %}"
                             ><i class="fa fa-fw fa-user-circle"></i>Diagnosis
                             <span class="badge badge-success">6</span></a
@@ -82,7 +82,7 @@
                             </li>
                           <li class="nav-item">
                               <a
-                                class="nav-link"
+                                class="nav-link active"
                                 href="{% url 'analytics' %}"
                                 ><i class="fa fa-fw fa-rocket"></i>Analytics</a
                               >
@@ -118,7 +118,7 @@
         <!-- ============================================================== -->
         <!-- simple line chart  -->
         <!-- ============================================================== -->
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
           <div class="card">
             <h5 class="card-header">Nutrition Value compared with food items taken</h5>
             <div class="card-body">
@@ -132,30 +132,30 @@
         <!-- ============================================================== -->
         <!-- holes in data chart  -->
         <!-- ============================================================== -->
-        <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
           <div class="card">
-            <h5 class="card-header">Holes In Data</h5>
+            <h5 class="card-header">Consistency of exercising</h5>
             <div class="card-body">
               <div class="ct-chart-holes ct-golden-section"></div>
             </div>
           </div>
-        </div> -->
+        </div>
         <!-- ============================================================== -->
         <!-- end holes in data chart  -->
         <!-- ============================================================== -->
       </div>
-      <!-- <div class="row"> -->
+      <div class="row">
       <!-- ============================================================== -->
       <!-- whole numbers chart  -->
       <!-- ============================================================== -->
-      <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
           <div class="card">
-            <h5 class="card-header">Whole Numbers</h5>
+            <h5 class="card-header">Nutrients trend for the last 7 days</h5>
             <div class="card-body">
               <div class="ct-chart-wnumbers ct-golden-section"></div>
             </div>
           </div>
-        </div> -->
+        </div>
       <!-- ============================================================== -->
       <!-- end whole numbers charts -->
       <!-- ============================================================== -->
@@ -165,7 +165,7 @@
       <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
         <div class="card">
           <h5 class="card-header">
-            Line Scatter Diagram With Responsive Settings
+            Different disease symptoms occured compared with weeks
           </h5>
           <div class="card-body">
             <div class="ct-chart-scatter ct-golden-section"></div>
@@ -363,7 +363,7 @@
   {% endblock %} {% block scripts %}
   <script src="{% static 'vendor/slimscroll/jquery.slimscroll.js' %}"></script>
   <script src="{% static 'vendor/charts/chartist-bundle/chartist.min.js' %}"></script>
-  <!-- <script src="{% static 'vendor/charts/chartist-bundle/Chartistjs.js' %}"></script> -->
+  <script src="{% static 'vendor/charts/chartist-bundle/Chartistjs.js' %}"></script>
   <script src="{% static 'js/main-js.js' %}"></script>
   <script>
     $(document).ready(function() {

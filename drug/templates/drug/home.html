@@ -141,6 +141,7 @@
                           <button class="btn btn-primary" id="submit">
                             Submit
                           </button>
+                          <div class="loader">Loading...</div>
                         </div>
                         <div id="insertoptions"></div>
                       </div>
@@ -227,6 +228,8 @@
 <script>
     queryText = "";
   $("#submit").click(function(event) {
+    $("#submit").fadeOut();
+    $('.loader').show();
     console.log("clicked");
     event.preventDefault();
     var userQuery = $("#wellnessquestion").val();
@@ -257,7 +260,7 @@
         htmlstr +=
           '<div class="form-group row justify-content-center diagnosis"><button class="btn btn-primary" id="diagnose">Diagnose</button></div>';
         $("#feeling").fadeOut();
-        $("#submit").fadeOut();
+        $('.loader').hide();
         $("#insertoptions").html(htmlstr);
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -268,6 +271,8 @@
 </script>
 <script>
   $("body").on('click', '#diagnose' , function(event){
+    $('#diagnose').fadeOut();
+    $('.loader').show();
     event.preventDefault();
     var selectedOnes = [];
     var unselectedOnes = [];
@@ -300,6 +305,7 @@
           $.map(data.test.conditions, function(value, index){
             htmlstr += '<h3>' + (index + 1) + '. ' + value.name + ' ' + value.probability + '</h3>';
           })
+          $('.loader').hide();
           $('#finale').html(htmlstr);
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
