@@ -51,3 +51,5 @@ Developed by Ctrl-plus-C for Hack36 2019
 2. [Anupam Dagar](https://github.com/Anupam-dagar)
 3. [Anshu Yadav](https://github.com/Anshu-ros)
 4. [Lekhika Dugtal](https://github.com/CleverFool77)
+
+Second Runnerup of Hack36 <3
